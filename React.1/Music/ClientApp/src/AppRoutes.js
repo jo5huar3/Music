@@ -2,6 +2,7 @@ import ApiAuthorzationRoutes from './components/api-authorization/ApiAuthorizati
 import { Counter } from "./components/Counter";
 import { FetchData } from "./components/FetchData";
 import { Home } from "./components/Home";
+import { Song } from "./components/Song"
 
 const AppRoutes = [
   {
@@ -11,6 +12,11 @@ const AppRoutes = [
   {
     path: '/counter',
     element: <Counter />
+  },
+  {
+    path: '/Song',
+    //requireAuth: true,
+    element: <Song />
   },
   {
     path: '/fetch-data',
