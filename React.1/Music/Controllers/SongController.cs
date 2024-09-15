@@ -1,7 +1,5 @@
-using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Mvc;
 using Music.Models;
-using Newtonsoft.Json;
 
 namespace Music.Controllers;
 

@@ -22,7 +22,7 @@ function DropDownAnchors() {
       <DropdownMenu dark="false">
         <DropdownItem href="/song">Roles</DropdownItem>
         <DropdownItem href="/song">Users</DropdownItem>
-        <DropdownItem href="/song">Role Claims</DropdownItem>
+        <DropdownItem href="/fetch-roles">Role Claims</DropdownItem>
       </DropdownMenu>
     </Dropdown>
   );

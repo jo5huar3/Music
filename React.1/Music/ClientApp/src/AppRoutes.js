@@ -2,7 +2,8 @@ import ApiAuthorzationRoutes from './components/api-authorization/ApiAuthorizati
 import { Counter } from "./components/Counter";
 import { FetchData } from "./components/FetchData";
 import { Home } from "./components/Home";
-import { Song } from "./components/Song"
+import { Song } from "./components/Song";
+import { FetchRoles } from "./components/admin/FetchRoles";
 
 const AppRoutes = [
   {
@@ -15,13 +16,18 @@ const AppRoutes = [
   },
   {
     path: '/Song',
-    //requireAuth: true,
+    requireAuth: true,
     element: <Song />
   },
   {
     path: '/fetch-data',
     requireAuth: true,
     element: <FetchData />
+  },
+  {
+    path: '/fetch-roles',
+    requireAuth: true,
+    element: <FetchRoles />
   },
   ...ApiAuthorzationRoutes
 ];

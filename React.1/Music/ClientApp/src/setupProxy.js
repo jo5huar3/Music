@@ -12,7 +12,8 @@ const context = [
   "/connect",
   "/ApplyDatabaseMigrations",
   "/_framework",
-  "/Song"
+  "/Song",
+  "/Admin/Fetch"
 ];
 
 const onError = (err, req, resp, target) => {
