@@ -1,79 +1,128 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import authService from '../api-authorization/AuthorizeService'
 import { Row, Col } from 'reactstrap/lib';
 
-export class FetchRoles extends Component {
-  static displayName = FetchRoles.name;
+export function FetchRoles() {
+  const [roles, setRoles] = useState([])
+  const [newRole, setNewRole] = useState("")
+  const [loading, setLoading] = useState(true)
 
-  constructor(props) {
-    super(props);
-    this.state = { roles: [], loading: true };
+  function handleSubmit(e) {
+    e.preventDefault()
+    if (newRole !== "") {
+      addRole()
+    }
   }
 
-  componentDidMount() {
-    this.populateRoles();
+  let contents = loading
+    ? <p><em>Loading...</em></p>
+    : renderRolesTable(roles);
+
+  if (loading) {
+    populateRoles()
   }
 
-  static renderRolesTable(roles) {
-    return (
-      <table className="table table-striped" aria-labelledby="tableLabel">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Id</th>
-          </tr>
-        </thead>
-        <tbody>
-          {roles.map(role =>
-            <tr key={role.id}>
-              <td>{role.name}</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    );
-  }
-
-  render() {
-    let contents = this.state.loading
-      ? <p><em>Loading...</em></p>
-      : FetchRoles.renderRolesTable(this.state.roles);
-
-    return (
+  return (
+    <div>
+      <h1 id="tableLabel">Roles</h1>
       <div>
-        <h1 id="tableLabel">Roles</h1>
-        <p>This component demonstrates fetching Roles from the server.</p>
-        <div>
-          {contents}
-        </div>
-        <div>
-          <form>
-            <Row className="row-cols-lg-auto g-3 align-items-center">
-              <Col>
+        <div><p>Current Roles in the system</p></div>
+        {contents}
+      </div>
+      <div>
+        <form onSubmit={handleSubmit}>
+          <Row className="row-cols-lg-auto g-3 align-items-center">
+            <Col>
               <input
-                id="role-name"
-                name="role"
+                value={newRole}
+                onChange={e => setNewRole(e.target.value)}
+                id="rolename"
+                name="rolename"
                 placeholder="Role Name"
               />
-              </Col>
-              <Col>
+            </Col>
+            <Col>
               <button>
-                Submit
+                Add
               </button>
-              </Col>
-            </Row>
-          </form>
-        </div>
+            </Col>
+          </Row>
+        </form>
       </div>
-    );
+    </div>
+  );
+
+  async function deleteRole(rolename) {
+    const token = await authService.getAccessToken();
+    await fetch('Admin/DeleteRole', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(rolename)
+    })
+    setLoading(true)
   }
 
-  async populateRoles() {
+  async function addRole() {
+    const token = await authService.getAccessToken();
+    const response = await fetch('Admin/AddRole', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(newRole)
+    })
+    //const data = await response.json();
+    //console.log(response.status)
+    //setRoles(data);
+    setLoading(true);
+    setNewRole("");
+  }
+
+  async function populateRoles() {
     const token = await authService.getAccessToken();
     const response = await fetch('Admin/Fetch', {
       headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
     });
     const data = await response.json();
-    this.setState({ roles: data, loading: false });
+    setRoles(data);
+    setLoading(false);
+    setNewRole("");
+  }
+
+
+  function handleDelete(e) {
+    deleteRole(e)
+  }
+
+  function renderRolesTable(roles) {
+    return (
+      <table className="table table-striped" aria-labelledby="tableLabel">
+        <thead>
+          <tr>
+            <th>Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          {roles.map(role =>
+            <tr key={role.name}>
+              <td>
+                <label>
+                  {role.name}
+                </label>
+                </td>
+                <td>
+                <button onClick={() => handleDelete(role.name)} >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    );
   }
 }

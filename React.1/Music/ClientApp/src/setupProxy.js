@@ -13,7 +13,9 @@ const context = [
   "/ApplyDatabaseMigrations",
   "/_framework",
   "/Song",
-  "/Admin/Fetch"
+  "/Admin/Fetch",
+  "/Admin/AddRole",
+  "/Admin/DeleteRole"
 ];
 
 const onError = (err, req, resp, target) => {
